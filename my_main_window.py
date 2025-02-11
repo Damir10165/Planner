@@ -1,5 +1,5 @@
-from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QPushButton, QTableView, QWidget, QCalendarWidget, QMenu
-from PyQt6.QtCore import Qt, QSize
+from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QPushButton, QTableView, QWidget, QCalendarWidget
+from PyQt6.QtCore import Qt, QSize, QEvent
 from PyQt6.QtGui import QIcon
 
 class MyMainWindow(QMainWindow):
@@ -19,8 +19,9 @@ class MyMainWindow(QMainWindow):
         self.btn_calendar.setIconSize(QSize(45, 45))
 
         self.calendar = QCalendarWidget()
+
         # убираем у календаря возможность закрыть его и ставим поверх главного окна
-        self.calendar.setWindowFlags(Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint)
+        self.calendar.setWindowFlags(Qt.WindowType.FramelessWindowHint)
 
         self.btn_calendar.clicked.connect(self.open_calendar)
 
@@ -35,7 +36,7 @@ class MyMainWindow(QMainWindow):
     def open_calendar(self):
         if self.sender().isChecked():
             # размещаем календарь под кнопкой, которая его открывает
-            self.calendar.move(self.x() + self.btn_calendar.x(), self.y() + self.btn_calendar.y()
+            self.calendar.move(self.x() + self.btn_calendar.x() - 207, self.y() + self.btn_calendar.y()
                                + self.btn_calendar.height() + 30)
             self.calendar.show()
         else:
@@ -44,10 +45,19 @@ class MyMainWindow(QMainWindow):
     def moveEvent(self, a0):
         super().moveEvent(a0)
         # обновляем расположение календаря при изменении расположения главного окна
-        self.calendar.move(self.x() + self.btn_calendar.x(), self.y() + self.btn_calendar.y()
+        self.calendar.move(self.x() + self.btn_calendar.x() - 207, self.y() + self.btn_calendar.y()
                            + self.btn_calendar.height() + 30)
 
     def closeEvent(self, a0):
         # закрываем календарь вместе с главным окном
         self.calendar.close()
         super().closeEvent(a0)
+
+    def changeEvent(self, a0):
+        super().changeEvent(a0)
+        # делаем так, чтобы вовремя сворачивания главного окна, календарь тоже сворачивался
+        if a0.type() == a0.type().WindowStateChange:
+            self.calendar.setWindowState(self.windowState())
+        # поднимаем календарь на самый верх, при взаимодействии с главным окном
+        if a0.type() == a0.type().ActivationChange:
+            self.calendar.raise_()
