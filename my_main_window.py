@@ -1,6 +1,10 @@
 from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QPushButton, QTableView, QWidget, QCalendarWidget
-from PyQt6.QtCore import Qt, QSize, QEvent
+from PyQt6.QtCore import Qt, QSize
 from PyQt6.QtGui import QIcon
+
+from week_table.week_table_model import WeekTableModel
+from week_table.week_table_view import WeekTableView
+
 
 class MyMainWindow(QMainWindow):
     def __init__(self):
@@ -26,7 +30,10 @@ class MyMainWindow(QMainWindow):
         self.btn_calendar.clicked.connect(self.open_calendar)
 
         self.main_layout.addWidget(self.btn_calendar, alignment=Qt.AlignmentFlag.AlignRight)
-        self.tabel = QTableView()
+        self.tabel = WeekTableView()
+        self.model = WeekTableModel()
+        self.tabel.setModel(self.model)
+
         self.main_layout.addWidget(self.tabel)
 
         wgt = QWidget()
