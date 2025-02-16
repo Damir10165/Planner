@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QPushButton, QTableView, QWidget, QCalendarWidget
+from PyQt6.QtWidgets import QMainWindow, QVBoxLayout, QPushButton, QWidget, QCalendarWidget
 from PyQt6.QtCore import Qt, QSize
 from PyQt6.QtGui import QIcon
 
@@ -33,8 +33,10 @@ class MyMainWindow(QMainWindow):
         self.tabel = WeekTableView()
         self.model = WeekTableModel()
         self.tabel.setModel(self.model)
-
         self.main_layout.addWidget(self.tabel)
+
+        self.update_table()
+        self.calendar.selectionChanged.connect(self.update_table)
 
         wgt = QWidget()
         wgt.setLayout(self.main_layout)
@@ -68,3 +70,9 @@ class MyMainWindow(QMainWindow):
         # поднимаем календарь на самый верх, при взаимодействии с главным окном
         if a0.type() == a0.type().ActivationChange:
             self.calendar.raise_()
+
+    def update_table(self):
+        """
+            Обновляет состояние таблицы при выборе новой даты в календаре
+        """
+        self.tabel.model().update_data(self.calendar.selectedDate())

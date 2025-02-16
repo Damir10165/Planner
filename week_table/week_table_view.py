@@ -9,5 +9,3 @@ class WeekTableView(QTableView):
         # равномерно заполняем таблицу
         self.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
         self.verticalHeader().setStretchLastSection(True)
-
-        self.setStyleSheet("QHeaderView::section { background-color:blue }")
