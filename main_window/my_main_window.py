@@ -19,7 +19,7 @@ class MyMainWindow(QMainWindow):
         self.btn_calendar.setCheckable(True)
         self.btn_calendar.setFixedSize(50, 50)
         self.btn_calendar.setFlat(True)
-        self.btn_calendar.setIcon(QIcon("calenda.png"))
+        self.btn_calendar.setIcon(QIcon("main_window/calenda.png"))
         self.btn_calendar.setIconSize(QSize(45, 45))
 
         self.calendar = QCalendarWidget()
